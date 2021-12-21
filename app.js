@@ -30,6 +30,10 @@ app.engine(`ejs`, ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, `views`));
 
+// make /public accessible
+const publicDirectoryPath = path.join(__dirname, "./assets");
+app.use(express.static(publicDirectoryPath));
+
 // handling JSON and URL encoded form submissions
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -78,6 +82,7 @@ app.put(`/properties/:id`, async (req, res) => {
   res.redirect(`/properties/${id}/`);
 });
 app.delete(`/properties/:id`, async (req, res) => {
+  console.log(`DELETE REQUEST`);
   const { id } = req.params;
   await Property.findByIdAndDelete(id);
   res.redirect(`/properties/`);
