@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PropertyApp - Add New Property</title>
+</head>
+
+<body>
+	<%- include(`../partials/nav.ejs`) %>
+	<h1>Add New Property</h1>
+	<form action="/properties/add/" method="post">
+	<div>
+		<label for="title">Title</label></br>
+		<input type="text" name="title" id="title" placeholder="eg: 3BHK in Deansgate">
+	</div>
+	<div>
+		<label for="rent">Rent</label></br>
+		<input type="number" name="rent" id="rent" placeholder="eg: 2" min="0" max="100000" step="5">
+	</div>
+	<div>
+		<label for="property-type">Type</label></br>
+		<select name="type" id="property-type">
+			<option value="house ">House </option>
+			<option value="flat">Flat</option>
+			<option value="apartment">Apartment</option>
+			<option value="bungalow">Bungalow</option>
+		</select>
+	</div>
+	<div>
+		<label for="area">Area</label></br>
+		<input type="text" name="area" id="area" placeholder="eg: Deansgate">
+	</div>
+	<div>
+		<label for="bathrooms">Bathrooms</label></br>
+		<input type="number" name="bathrooms" id="bathrooms" placeholder="eg: 2" min="0" max="25">
+	</div>
+	<div>
+		<label for="bedrooms">Bedrooms</label></br>
+		<input type="number" name="bedrooms" id="bedrooms" placeholder="eg: 4" min="0" max="25">
+	</div>
+	<div>
+		<label for="postcode">Postcode</label></br>
+		<input type="text" name="postcode" id="postcode" placeholder="eg: M1 1QD">
+	</div>
+	<div>
+		<label for="features">Features</label></br>
+		<input type="text" name="features" id="features" placeholder="eg: Close to train station"></br>
+		<input type="text" name="features" id="features" placeholder="eg: Inbuilt home appliances"></br>
+		<input type="text" name="features" id="features" placeholder="eg: Guaranteed car park"></br>
+		<input type="text" name="features" id="features" placeholder="eg: 24/7 concierge service"></br>
+		<input type="text" name="features" id="features" placeholder="eg: Private entrance available"></br>
+		<input type="text" name="features" id="features" placeholder="eg: Common pool and game area"></br>
+	</div>
+	<div>
+		<label for="title">Description</label></br>
+		<textarea name="description" id="description" cols="30" rows="10"></textarea>
+	</div>
+	<div>
+		<button type="submit">Add</button>
+		<button><a href="/properties/">Cancel</a></button>
+	</div>
+	</form>
+
+</body>
+
+</html>
