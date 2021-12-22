@@ -13,7 +13,7 @@ const PropertiesSchema = new Schema({
   latitude: Number,
   longitude: Number,
   features: [String],
-  description: String,
+  description: [String],
 });
 
 module.exports = mongoose.model(`Property`, PropertiesSchema);
