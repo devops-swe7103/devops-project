@@ -23,6 +23,18 @@ const helperFunctions = {
   randMinMaxFloor: function (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   },
+  geoBetween: function (latStart, latEnd, longStart, longEnd) {
+    // between Oswentry and Scarsborough
+    // geoBetween(52.8571472, 54.2755982, -0.4477916, -3.0933436)
+
+    const diffLat = latStart * 10000000 - latEnd * 10000000;
+    const lat = latEnd + (Math.random() * diffLat) / 10000000;
+
+    const diffLong = longStart * 10000000 - longEnd * 10000000;
+    const long = longEnd + (Math.random() * diffLong) / 10000000;
+
+    return { lat, long };
+  },
   randArrEle: function (arr) {
     // return arr[Math.floor(Math.random() * arr.length) + 1];
     return arr[Math.floor(Math.random() * arr.length)];
@@ -55,17 +67,17 @@ const helperFunctions = {
         this.randArrEle(features),
         this.randArrEle(features),
       ],
-      description: [
-        `${this.randArrEle(
+      description: `${this.randArrEle(
+        descriptions
+      )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.
+
+        ${this.randArrEle(
           descriptions
-        )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.`,
-        `${this.randArrEle(
-          descriptions
-        )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.`,
-        `${this.randArrEle(
+        )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
+
+        ${this.randArrEle(
           descriptions
         )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
-      ],
     };
 
     return propertyObject;
@@ -93,16 +105,22 @@ function generatePropertyFromForm(o) {
   const bedrooms = o.bedrooms || randMinMaxFloor(1, 5);
   const area = o.area || randArrEle(areas);
   const type = o.type || randArrEle(types);
+  const { lat, long } = helperFunctions.geoBetween(
+    52.8571472,
+    54.2755982,
+    -0.4477916,
+    -3.0933436
+  );
 
   // form data can have empty features which need to be removed
   const features = [];
   o.features.forEach((feature) => {
-    if (features !== ``) features.push(feature);
+    if (feature !== ``) features.push(feature);
   });
 
   const propertyObject = {
     agentCode: (`0` + randMinMaxFloor(1, totalAgents)).slice(-2),
-    title: `${bedrooms}BHK ${type} in ${area}`,
+    title: o.title || `${bedrooms}BHK ${type} in ${area}`,
     // type: types[Math.floor(Math.random() * types.length)],
     type: type.toLowerCase(),
     rent: o.rent || randMinMaxFloor(333, 3333),
@@ -110,8 +128,8 @@ function generatePropertyFromForm(o) {
     postcode: o.postcode || randArrEle(postcodes),
     bedrooms: bedrooms,
     bathrooms: o.bathrooms || randMinMaxFloor(1, 3),
-    latitude: o.latitude || randMinMax(53.327049, 53.639302),
-    longitude: o.longitude || randMinMax(-2.094019, -2.73582),
+    latitude: o.latitude || lat,
+    longitude: o.longitude || long,
     features: features || [
       randArrEle(features),
       randArrEle(features),
@@ -120,17 +138,19 @@ function generatePropertyFromForm(o) {
       randArrEle(features),
       randArrEle(features),
     ],
-    description: o.description || [
-      `${randArrEle(
+    description:
+      o.description ||
+      `${this.randArrEle(
         descriptions
-      )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.`,
-      `${randArrEle(
-        descriptions
-      )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.`,
-      `${randArrEle(
-        descriptions
-      )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
-    ],
+      )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.
+
+        ${this.randArrEle(
+          descriptions
+        )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
+
+        ${this.randArrEle(
+          descriptions
+        )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
   };
 
   return propertyObject;
