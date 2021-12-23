@@ -8,7 +8,7 @@
   </head>
   <body>
     <%- include(`../partials/nav.ejs`) %>
-    <h1><%= property.title %></h1>
+    <h1><%= property.title %></h1><a href="<%= `/properties/${property._id}/edit/` %>">Edit</a>
     <p>Type: <%= property.type %></p>
     <p>Rent: <%= property.rent %></p>
     <p>Area: <%= property.area %></p>
@@ -24,9 +24,7 @@
       <% }) %>
     </ul>
     <h2>Description</h2>
-    <% property.description.forEach(paragraph => { %>
-      <p><%= paragraph %></p>
-    <% }) %>
+    <% property.description %>
     <h2>Agent Details</h2>
     <strong>Name</strong>: <a href="/agents/<%= agent._id %>"><%= agent.name %></a></br>
     <strong>Address</strong>: <%= agent.address %></br>
