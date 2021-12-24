@@ -8,7 +8,9 @@
   </head>
   <body>
     <%- include(`../partials/nav.ejs`) %>
-    <h1><%= property.title %></h1><a href="<%= `/properties/${property._id}/edit/` %>">Edit</a>
+    <h1><%= property.title %></h1>
+    <a href="<%= `/properties/${property._id}/edit/` %>">Edit</a>
+    <form action="<%= `/properties/${property._id}/?_method=DELETE` %>" method="post"><button type="submit">Delete</button></form>
     <p>Type: <%= property.type %></p>
     <p>Rent: <%= property.rent %></p>
     <p>Area: <%= property.area %></p>
