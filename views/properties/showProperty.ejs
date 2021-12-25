@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property: <%= property.title %> - PropertyApp</title>
-  </head>
-  <body>
-    <%- include(`../partials/nav.ejs`) %>
-    <h1><%= property.title %></h1>
-    <a href="<%= `/properties/${property._id}/edit/` %>">Edit</a>
-    <form action="<%= `/properties/${property._id}/?_method=DELETE` %>" method="post"><button type="submit">Delete</button></form>
-    <p>Type: <%= property.type %></p>
-    <p>Rent: <%= property.rent %></p>
-    <p>Area: <%= property.area %></p>
-    <p>Postcode: <%= property.postcode %></p>
-    <p>Bedrooms: <%= property.bedrooms %></p>
-    <p>Bathrooms: <%= property.bathrooms %></p>
-    <p>Latitude: <%= property.latitude %></p>
-    <p>Longitude: <%= property.longitude %></p>
-    <h2>Features: </h2>
-    <ul>
-      <% property.features.forEach(feature => { %>
-        <li><%= feature %></li>
-      <% }) %>
-    </ul>
-    <h2>Description</h2>
-    <% property.description %>
-    <h2>Agent Details</h2>
-    <strong>Name</strong>: <a href="/agents/<%= agent._id %>"><%= agent.name %></a></br>
-    <strong>Address</strong>: <%= agent.address %></br>
-    <strong>Phone</strong>: <%= agent.phone %></br>
-  </body>
-</html>
+<% layout(`layouts/boilerplate`) %>
+  <h1><%= property.title %></h1>
+  <a href="<%= `/properties/${property._id}/edit/` %>">Edit</a>
+  <form action="<%= `/properties/${property._id}/?_method=DELETE` %>" method="post"><button type="submit">Delete</button></form>
+  <p>Type: <%= property.type %></p>
+  <p>Rent: <%= property.rent %></p>
+  <p>Area: <%= property.area %></p>
+  <p>Postcode: <%= property.postcode %></p>
+  <p>Bedrooms: <%= property.bedrooms %></p>
+  <p>Bathrooms: <%= property.bathrooms %></p>
+  <p>Latitude: <%= property.latitude %></p>
+  <p>Longitude: <%= property.longitude %></p>
+  <h2>Features: </h2>
+  <ul>
+    <% property.features.forEach(feature => { %>
+      <li><%= feature %></li>
+    <% }) %>
+  </ul>
+  <h2>Description</h2>
+  <% property.description %>
+  <h2>Agent Details</h2>
+  <strong>Name</strong>: <a href="/agents/<%= agent._id %>"><%= agent.name %></a></br>
+  <strong>Address</strong>: <%= agent.address %></br>
+  <strong>Phone</strong>: <%= agent.phone %></br>

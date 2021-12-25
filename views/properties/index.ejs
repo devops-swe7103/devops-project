@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Properties - PropertyApp</title>
-  </head>
-  <body>
-    <%- include(`../partials/nav.ejs`) %>
-    <h1>All Properties</h1>
-    <ul>
-      <% properties.forEach(property => { %>
-        <% const agentIndex = agents.findIndex((agent) => agent.agentCode === property.agentCode); const agent = agents[agentIndex]; %>
-        <li><a href="/properties/<%= property._id %>"><%= property.title %></a> listed by <a href="/agents/<%= agent._id %>"><%= agent.name %></a> (<a href="/properties/<%= property._id %>/edit/">Edit</a>)</li>
-      <% }) %>
-    </ul>
-  </body>
-</html>
+<% layout(`layouts/boilerplate`) %>
+<h1>All Properties</h1>
+<ul>
+  <% properties.forEach(property => { %>
+    <% const agentIndex = agents.findIndex((agent) => agent.agentCode === property.agentCode); const agent = agents[agentIndex]; %>
+    <li><a href="/properties/<%= property._id %>"><%= property.title %></a> listed by <a href="/agents/<%= agent._id %>"><%= agent.name %></a> (<a href="/properties/<%= property._id %>/edit/">Edit</a>)</li>
+  <% }) %>
+</ul>

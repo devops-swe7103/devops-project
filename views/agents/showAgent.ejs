@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent: <% agent.name %> - PropertyApp</title>
-  </head>
-  <body>
-    <%- include(`../partials/nav.ejs`) %>
-    <h1>Agent Profile</h1>
-    <strong>Name</strong>: <%= agent.name %></br>
-    <strong>Address</strong>: <%= agent.address %></br>
-    <strong>Phone</strong>: <%= agent.phone %></br>
+<% layout(`layouts/boilerplate`) %>
+  <h1>Agent Profile</h1>
+  <strong>Name</strong>: <%= agent.name %></br>
+  <strong>Address</strong>: <%= agent.address %></br>
+  <strong>Phone</strong>: <%= agent.phone %></br>
 
-    <h2>Properties listed by Agent</h2>
-    <% properties.forEach(property=> { %>
-      <li><a href="/properties/<%= property._id %>">
-          <%= property.title %>
-        </a>
-      </li>
-    <% }) %>
-  </body>
-</html>
+  <h2>Properties listed by Agent</h2>
+  <% properties.forEach(property=> { %>
+    <li><a href="/properties/<%= property._id %>">
+        <%= property.title %>
+      </a>
+    </li>
+  <% }) %>
