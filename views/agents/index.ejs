@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Agents - PropertyApp</title>
-</head>
-
-<body>
-  <%- include(`../partials/nav.ejs`) %>
-    <h1>All Agents</h1>
-    <ul>
-      <% agents.forEach(agent=> { %>
-        <li>
-          <a href="/agents/<%= agent._id %>">
-            <%= agent.name %>
-          </a> Phone: <%= agent.phone %>
-        </li>
-        <% }) %>
-    </ul>
-</body>
-
-</html>
+<% layout(`layouts/boilerplate`) %>
+  <h1>All Agents</h1>
+  <ul>
+    <% agents.forEach(agent=> { %>
+      <li>
+        <a href="/agents/<%= agent._id %>">
+          <%= agent.name %>
+        </a> Phone: <%= agent.phone %>
+      </li>
+      <% }) %>
+  </ul>
