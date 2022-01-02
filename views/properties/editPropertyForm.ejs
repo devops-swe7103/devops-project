@@ -1,60 +1,104 @@
 <% layout(`layouts/boilerplate`) %>
   <% const {_id, title, type, rent, area, postcode, bedrooms, bathrooms, latitude, longitude, features, description} = property; %>
-  <h1>Edit Property: <%= title %></h1>
-  <form action="/properties/<%= _id %>?_method=PUT" method="post">
-    <div>
-      <label for="title">Title</label></br>
-      <input type="text" name="title" id="title"
-        placeholder="eg: 3BHK in Deansgate" value="<%= title %>" >
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center mb-3">
+        Edit Property: <%= title %>
+      </h1>
     </div>
-    <div>
-      <label for="rent">Rent</label></br>
-      <input type="number" name="rent" id="rent" placeholder="eg: 2" min="0"
-        max="100000" step="5" value="<%= rent %>">
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <form action="/properties/<%= _id %>?_method=PUT" method="post">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="mb-1" for="title">Title</label>
+              <input class="form-control mb-3" type="text" name="title" id="title"
+                placeholder="eg: 3BHK in Deansgate" value="<%= title %>" >
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="mb-1" for="rent">Rent</label>
+              <input class="form-control mb-3" type="number" name="rent" id="rent"
+                placeholder="eg: 2" min="0" max="100000" step="5" value="<%= rent %>">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="form-group">
+              <label class="mb-1" for="property-type">Type</label>
+              <select class="form-control" name="type" id="property-type">
+                <option value="house ">House </option>
+                <option value="flat">Flat</option>
+                <option value="apartment">Apartment</option>
+                <option value="bungalow">Bungalow</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="mb-1" for="bathrooms">Bathrooms</label>
+              <input class="form-control mb-3" type="number" name="bathrooms"
+                id="bathrooms" placeholder="eg: 2" min="0" max="25" value="<%= bathrooms %>">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="mb-1" for="bedrooms">Bedrooms</label>
+              <input class="form-control mb-3" type="number" name="bedrooms"
+                id="bedrooms" placeholder="eg: 4" min="0" max="25" value="<%= bedrooms %>">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label class="mb-1" for="area">Area</label>
+              <input class="form-control mb-3" type="text" name="area" id="area"
+                placeholder="eg: Deansgate" value="<%= area %>">
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="form-group">
+              <label class="mb-1" for="postcode">Postcode</label>
+              <input class="form-control mb-3" type="text" name="postcode"
+                id="postcode" placeholder="eg: M1 1QD" value="<%= postcode %>">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="mb-1" for="features">Features</label>
+          <div class="row">
+            <div class="col-md-6">
+              <% for( let i = 0; i < 3; i++ ) { %>
+                <input class="form-control mb-3" type="text" name="features"
+                id="features" placeholder="eg: Close to train station" value="<%= features[i] %>" >
+              <% } %>
+            </div>
+            <div class="col-md-6">
+              <% for( let i=3; i < 6; i++ ) { %>
+                <input class="form-control mb-3" type="text" name="features"
+                id="features" placeholder="eg: Close to train station" value="<%= features[i]
+                  %>" >
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="mb-1" for="description">Description</label>
+          <textarea class="form-control" name="description" id="description"
+            rows="5"><%= description %></textarea>
+        </div>
+        <div class="control-buttons-row py-2 d-flex">
+          <button class="btn btn-success" type="submit">Update</button>
+          <a class="btn btn-warning" href="/properties/<%= _id %>">Cancel</a>
+        </div>
+      </form>
+      <form action="<%= `/properties/${property._id}/?_method=DELETE` %>"
+        method="post"><button class="btn btn-danger d-inline-flex"
+          type="submit">Delete</button></form>
     </div>
-    <div>
-      <label for="property-type">Type</label></br>
-      <select name="type" id="property-type">
-        <option value="house ">House </option>
-        <option value="flat">Flat</option>
-        <option value="apartment">Apartment</option>
-        <option value="bungalow">Bungalow</option>
-      </select>
-    </div>
-    <div>
-      <label for="area">Area</label></br>
-      <input type="text" name="area" id="area" placeholder="eg: Deansgate" value="<%= area %>">
-    </div>
-    <div>
-      <label for="bathrooms">Bathrooms</label></br>
-      <input type="number" name="bathrooms" id="bathrooms" placeholder="eg: 2"
-        min="0" max="25" value="<%= bathrooms %>">
-    </div>
-    <div>
-      <label for="bedrooms">Bedrooms</label></br>
-      <input type="number" name="bedrooms" id="bedrooms" placeholder="eg: 4"
-        min="0" max="25" value="<%= bedrooms %>">
-    </div>
-    <div>
-      <label for="postcode">Postcode</label></br>
-      <input type="text" name="postcode" id="postcode"
-        placeholder="eg: M1 1QD" value="<%= postcode %>">
-    </div>
-    <div>
-      <label for="features">Features</label></br>
-      <% features.forEach(feature => { %>
-        <input type="text" name="features" id="features" placeholder="eg: Close to train station" value="<%= feature %>"></br>
-      <% }) %>
-    </div>
-    <div>
-      <label for="title">Description</label></br>
-      <textarea name="description" id="description" cols="30"
-        rows="10"><%= description %></textarea>
-    </div>
-    <div>
-      <button type="submit">Save</button>
-      <button><a href="<%= `/properties/${_id}`%>">Cancel</a></button>
-    </div>
-  </form>
-  <form action="<%= `/properties/${property._id}/?_method=DELETE` %>"
-      method="post"><button type="submit">Delete</button></form>
+  </div>
