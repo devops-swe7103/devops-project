@@ -40,9 +40,6 @@ const helperFunctions = {
     // return arr[Math.floor(Math.random() * arr.length) + 1];
     return arr[Math.floor(Math.random() * arr.length)];
   },
-  randIndex: function (arr) {
-    return Math.floor(Math.random() * arr.length);
-  },
   generateProperty: function () {
     const rand = this.randMinMaxFloor(333, 3333);
     const rent = rand - (rand % 5);
@@ -126,6 +123,10 @@ function generatePropertyFromForm(o) {
     -3.0933436
   );
 
+  const index = randMinMaxFloor(1, 99);
+  const imageIndex = ("0" + index).slice(-2);
+  const imageSrc = `/images/properties/property (${imageIndex}).jpg`;
+
   // form data can have empty features which need to be removed
   const features = [];
   o.features.forEach((feature) => {
@@ -138,6 +139,7 @@ function generatePropertyFromForm(o) {
     // type: types[Math.floor(Math.random() * types.length)],
     type: type.toLowerCase(),
     rent: o.rent || randMinMaxFloor(333, 3333),
+    image: o.image || imageSrc,
     area: area,
     city: city,
     postcode: o.postcode || randArrEle(postcodes),
@@ -171,7 +173,65 @@ function generatePropertyFromForm(o) {
   return propertyObject;
 }
 
+function addPropertyGenerator() {
+  // o is the req.body object that contains /properties/add form data
+  const { randMinMax, randMinMaxFloor, randArrEle } = helperFunctions;
+
+  const bedrooms = randMinMaxFloor(1, 5);
+  const area = randArrEle(areas);
+  const city = randArrEle(cities);
+  const type = randArrEle(types);
+  const { lat, long } = helperFunctions.geoBetween(
+    52.8571472,
+    54.2755982,
+    -0.4477916,
+    -3.0933436
+  );
+
+  const index = randMinMaxFloor(1, 99);
+  const imageIndex = ("0" + index).slice(-2);
+  const imageSrc = `/images/properties/property (${imageIndex}).jpg`;
+
+  const propertyObject = {
+    agentCode: (`0` + randMinMaxFloor(1, totalAgents)).slice(-2),
+    title: `${bedrooms}BHK ${type} in ${area}`,
+    // type: types[Math.floor(Math.random() * types.length)],
+    type: type.toLowerCase(),
+    rent: randMinMaxFloor(333, 3333),
+    area: area,
+    city: city,
+    postcode: randArrEle(postcodes),
+    image: imageSrc,
+    bedrooms: bedrooms,
+    bathrooms: randMinMaxFloor(1, 3),
+    latitude: lat,
+    longitude: long,
+    features: [
+      randArrEle(features),
+      randArrEle(features),
+      randArrEle(features),
+      randArrEle(features),
+      randArrEle(features),
+      randArrEle(features),
+    ],
+    description: `${randArrEle(
+      descriptions
+    )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.
+
+        ${randArrEle(
+          descriptions
+        )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
+
+        ${randArrEle(
+          descriptions
+        )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
+  };
+
+  return propertyObject;
+}
+
 module.exports.totalAgents = totalAgents;
 module.exports.totalProperties = totalProperties;
 module.exports.helperFunctions = helperFunctions;
 module.exports.generatePropertyFromForm = generatePropertyFromForm;
+module.exports.addPropertyGenerator = addPropertyGenerator;

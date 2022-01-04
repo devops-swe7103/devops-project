@@ -16,6 +16,10 @@ const PropertiesSchema = new Schema({
   longitude: Number,
   features: [String],
   description: String,
+  agentID: {
+    type: Schema.Types.ObjectId,
+    ref: `Agent`,
+  },
 });
 
 module.exports = mongoose.model(`Property`, PropertiesSchema);

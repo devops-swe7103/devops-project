@@ -7,6 +7,12 @@ const AgentsSchema = new Schema({
   logo: String,
   address: String,
   phone: String,
+  properties: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: `Property`,
+    },
+  ],
 });
 
 module.exports = mongoose.model(`Agent`, AgentsSchema);
