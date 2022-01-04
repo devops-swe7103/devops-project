@@ -1,17 +1,20 @@
 <% layout(`layouts/boilerplate`) %>
 	<div class="row">
 		<div class="col-12">
-			<h1 class="text-center mb-3">
-				Add New Property
+			<h1 class="text-center mb-1">
+				<%= agent.name %>
 			</h1>
+			<h2 class="text-center mb-3">
+				Add New Property
+			</h2>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<form action="/properties/add/" method="post"
+			<form action="/agents/<%= agent._id %>/properties/new" method="post"
 			class="uses-bootstrap-validation" novalidate>
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-9">
 						<div class="form-group">
 							<label class="mb-1" for="title">Title</label>
 							<input class="form-control mb-3" type="text" name="title"
@@ -26,16 +29,6 @@
 								id="rent" placeholder="eg: 2" min="0" max="100000" step="5"
 								required>
 							<div class="valid-feedback">Looks good...</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label class="mb-1" for="agent">Agent</label>
-							<select class="form-control" name="agent" id="agent">
-								<% agents.forEach(agent => { %>
-									<option value="<%= agent._id %>"><%= agent.name %> </option>
-								<% }) %>
-							</select>
 						</div>
 					</div>
 				</div>

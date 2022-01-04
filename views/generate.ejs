@@ -1,0 +1,9 @@
+<% layout(`layouts/boilerplate`) %>
+  <h1>Generate Data </h1>
+  <form action="/generate" method="post">
+    <label for="agents">Agents</label>
+    <input type="number" name="agents" id="agents">
+    <label for="properties">Properties</label>
+    <input type="number" name="properties" id="properties">
+    <button type="submit">Generate</button>
+  </form>
