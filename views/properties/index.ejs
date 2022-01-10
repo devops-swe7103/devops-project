@@ -12,7 +12,6 @@
 </div>
 
 <% properties.forEach(property => { %>
-  <% const agentIndex = agents.findIndex((agent) => agent.agentCode === property.agentCode); const agent = agents[agentIndex]; %>
   <div class="card mb-3 property-listing-card">
     <div class="row">
       <div class="col-md-5 image-column">
@@ -48,6 +47,7 @@
         <div class="agent-details-row mt-auto">
           <h5 class="card-title">Listed by</h5>
           <div class="logo-column">
+            <% const agent = property.agentID; %>
             <a href="/agents/<%= agent._id %>">
               <img src="/images/agentLogos/<%= agent.name %>.jpeg" alt="" srcset="">
             </a>

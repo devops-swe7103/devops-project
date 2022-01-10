@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== `production`) {
+  require(`dotenv`).config();
+}
+
 const express = require("express");
 const path = require(`path`);
 const mongoose = require(`mongoose`);
@@ -17,8 +21,11 @@ const { propertySchemaJOI, agentSchemaJOI } = require(`./schemas`);
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
 
-// connecting to the localhost mongodb server
-mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
+// connecting to the mongodb server (local/remote)
+const dbUrl = process.env.DB_URL || `mongodb://localhost:27017/propertyApp`;
+
+// mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -86,7 +93,7 @@ app.get(`/`, (req, res) => {
 app.get(
   `/properties`,
   catchAsync(async (req, res) => {
-    const properties = await Property.find({});
+    const properties = await Property.find({}).populate(`agentID`);
     const agents = await Agent.find({});
     res.render(`properties/index`, { properties, agents });
   })
@@ -100,35 +107,21 @@ app.get(
     res.render(`properties/newPropertyForm`, { agents });
   })
 );
-// app.post(
-//   `/properties/add/`,
-//   validatePropertyJOI,
-//   catchAsync(async (req, res, err) => {
-//     // processing the form submitted data to generate a property object
-//     const { generatePropertyFromForm } = require("./seeds/helpers");
-//     const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
-//     await newProperty.save();
-//     res.redirect(`/properties/${newProperty._id}/`);
-//   })
-// );
 app.post(
   `/properties/add/`,
   validatePropertyJOI,
   catchAsync(async (req, res, err) => {
-    console.log(`req.body`);
-    console.log(req.body);
+    // processing the form submitted data and saving property to DB
+    const { generatePropertyFromForm } = require("./seeds/helpers");
+    const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
+    await newProperty.save();
 
     // add the property id to agent.properties[] to track
     const agent = await Agent.findById(req.body.agent);
-    console.log(`🚀 ✩ catchAsync ✩ agent`, agent);
+    agent.properties.push(req.body.agent);
+    await agent.save();
 
-    // const agent = await Agent.findByIdAndUpdate({ agent });
-
-    // processing the form submitted data to generate a property object
-    const { generatePropertyFromForm } = require("./seeds/helpers");
-    const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
-    // await newProperty.save();
-    // res.redirect(`/properties/${newProperty._id}/`);
+    res.redirect(`/properties/${newProperty._id}/`);
   })
 );
 
@@ -148,11 +141,9 @@ app.get(
 app.get(
   `/properties/:id`,
   catchAsync(async (req, res) => {
-    const property = await Property.findById(req.params.id);
+    const property = await Property.findById(req.params.id).populate(`agentID`);
 
-    const agent = await Agent.findOne({ agentCode: property.agentCode });
-
-    res.render(`properties/showProperty`, { property, agent });
+    res.render(`properties/showProperty`, { property });
   })
 );
 app.put(
@@ -170,9 +161,12 @@ app.put(
 app.delete(
   `/properties/:id`,
   catchAsync(async (req, res) => {
-    console.log(`DELETE REQUEST`);
+    console.log(`In DELETE: /properties/:id`);
     const { id } = req.params;
+    // deleting the property entry from the DB
     await Property.findByIdAndDelete(id);
+    // cleaning up the agent.properties array to remove the data
+
     res.redirect(`/properties/`);
   })
 );
@@ -235,13 +229,14 @@ app.post(
 
     // req.body does not contain the agent id so we will add it manually
     const propertyData = { agentID: agentID, ...req.body };
-    console.log(`🚀 ✩ catchAsync ✩ data`, propertyData);
+    // console.log(`🚀 ✩ catchAsync ✩ data`, propertyData);
 
     // save the property in the DB
     const newProperty = new Property({ propertyData });
     await newProperty.save();
     console.log(`New property saved`);
 
+    // add entry of property id to agent.properties[]
     const agent = await Agent.findById(agentID);
     console.log(`🚀 ✩ catchAsync ✩ agent BEFORE`, agent);
     agent.properties.push(newProperty);
@@ -254,14 +249,46 @@ app.post(
   })
 );
 
+// delete an agent
+app.delete(
+  `/agents/:agentID`,
+  catchAsync(async (req, res) => {
+    console.log(`In DELETE: /agents/:agentID`);
+    const { agentID } = req.params;
+    const agent = await Agent.findByIdAndDelete(agentID);
+
+    // await Agent.findByIdAndDelete();
+    const agents = await Agent.find({});
+    res.render(`agents/index`, { agents });
+  })
+);
+
 // display individual agent
 app.get(
   `/agents/:agentID`,
   catchAsync(async (req, res) => {
     const { agentID } = req.params;
-    const agent = await Agent.findById(agentID);
-    const properties = await Property.find({ agentCode: agent.agentCode });
-    res.render(`agents/showAgent`, { agent, properties });
+    const agent = await Agent.findById(agentID).populate(`properties`);
+    res.render(`agents/showAgent`, { agent });
+  })
+);
+
+// generate data route
+app.get(`/generate`, (req, res) => {
+  res.render(`generate`, { generationStatus: false });
+});
+app.post(
+  `/generate`,
+  catchAsync(async (req, res) => {
+    console.log(req.body);
+    const { agents, properties } = req.body;
+
+    const { seedDataToDB } = require(`./seeds/index.js`);
+
+    seedDataToDB(agents, properties);
+
+    res.render(`generate`, { generationStatus: true });
+    // res.redirect(`/agents/`);
   })
 );
 
@@ -283,6 +310,8 @@ app.use((err, req, res, next) => {
 });
 
 // starting the server
-app.listen(3000, () => {
-  console.log(`Serving on port 3000`);
+const port = process.env.PORT || 3000;
+console.log(`PORT: `, port);
+app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
 });

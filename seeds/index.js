@@ -1,7 +1,7 @@
 const mongoose = require(`mongoose`);
 const Property = require(`../models/property`);
 const Agent = require(`../models/agent`);
-const { helperFunctions, totalProperties, totalAgents } = require(`./helpers`);
+const { helperFunctions, totalAgents, totalProperties } = require(`./helpers`);
 
 // connecting to the localhost mongodb server
 mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
@@ -17,31 +17,11 @@ db.once(`open`, () => {
 });
 
 // clearing database before seeding
-const seedDataToDB = async () => {
+const seedDataToDB = async (totalAgents, totalProperties) => {
   // clear the property collection before adding any new property
   // console.log(`=== Deleting all data on DB ===`);
   await Property.deleteMany({});
   await Agent.deleteMany({});
-
-  // generating properties
-  for (let index = 0; index < totalProperties; index++) {
-    console.log(`Generating Property ${index + 1}`);
-    // using the helper function to generate a property
-    // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
-    const property = helperFunctions.generateProperty();
-    // console.log(property);
-
-    // create a new MongoDB Object containing property details
-    // console.log(`=== CREATING A MONGO PROPERTY OBJECT ===`);
-    const propertyMongoObject = new Property({ ...property });
-
-    // save to Mongo
-    // console.log(`=== BEGINNING DB DATA SAVE ===`);
-    await propertyMongoObject.save();
-
-    // console.log(`=== PROPERTY DATA SAVED ===`);
-    // console.log(propertyMongoObject);
-  }
 
   // generating agents
   for (let index = 0; index < totalAgents; index++) {
@@ -63,6 +43,27 @@ const seedDataToDB = async () => {
     // console.log(`=== AGENT DATA SAVED ===`);
     // console.log(agentMongoObject);
   }
+
+  // generating properties
+  for (let index = 0; index < totalProperties; index++) {
+    console.log(`Generating Property ${index + 1}`);
+    // using the helper function to generate a property
+    const property = await helperFunctions.generateProperty();
+
+    // create a new MongoDB Object containing property details
+    const propertyMongoObject = new Property({ ...property });
+
+    // save to Mongo
+    await propertyMongoObject.save();
+
+    // add entry of property id to the relevant agent.properties[]
+    const agent = await Agent.findById(propertyMongoObject.agentID);
+
+    agent.properties.push(propertyMongoObject._id);
+    await agent.save();
+  }
 };
 
-seedDataToDB();
+// seedDataToDB(totalAgents, totalProperties);
+
+module.exports.seedDataToDB = seedDataToDB;

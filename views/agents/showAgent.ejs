@@ -20,12 +20,15 @@
             Phone: <%= agent.phone %>
           </div>
           <a href="/agents/<%= agent._id %>/properties/new" class="btn btn-sm btn-success">Add Property</a>
+          <form action="<%= `/agents/${agent._id}/?_method=DELETE` %>"
+            method="post"><button class="btn btn-danger d-inline-flex"
+              type="submit">Delete Agent</button></form>
         </div>
       </div>
     </div>
     <div class="col-md-8">
       <h2 class="text-center">Properties listed by Agent</h2>
-      <% properties.forEach(property=> { %>
+      <% agent.properties.forEach(property=> { %>
         <div class="card mb-3 property-listing-card">
           <div class="row">
             <div class="col-md-5 image-column">

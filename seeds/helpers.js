@@ -1,3 +1,7 @@
+// mongo schemas
+const Property = require(`../models/property`);
+const Agent = require(`../models/agent`);
+
 const { dictionary } = require(`./dictionary`);
 const {
   types,
@@ -40,7 +44,7 @@ const helperFunctions = {
     // return arr[Math.floor(Math.random() * arr.length) + 1];
     return arr[Math.floor(Math.random() * arr.length)];
   },
-  generateProperty: function () {
+  generateProperty: async function () {
     const rand = this.randMinMaxFloor(333, 3333);
     const rent = rand - (rand % 5);
 
@@ -52,8 +56,12 @@ const helperFunctions = {
     const imageIndex = ("0" + index).slice(-2);
     const imageSrc = `/images/properties/property (${imageIndex}).jpg`;
 
+    // fetch total agents and their ids
+    const agents = await Agent.find({});
+
     const propertyObject = {
-      agentCode: (`0` + this.randMinMaxFloor(1, totalAgents)).slice(-2),
+      agentCode: (`0` + this.randMinMaxFloor(1, agents.length)).slice(-2),
+      agentID: agents[this.randMinMaxFloor(0, agents.length - 1)]._id,
       title: `${bedrooms}BHK ${type} in ${area}`,
       // type: types[Math.floor(Math.random() * types.length)],
       type: type,
